@@ -1,0 +1,14 @@
+{
+  "name": "aws_backend",
+  "version": "0.0.1",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "async": "^0.2.10",
+    "aws-sdk": "^2.109.0",
+    "express": "~3.4.8",
+    "jimp": "^0.2.28"
+  }
+}
