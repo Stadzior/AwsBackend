@@ -3,7 +3,8 @@ aws.config.loadFromPath('./config.json');
 var utils = require("./utils");
 var jimp = require("jimp");
 var queue = new aws.SQS({apiVersion: utils.API_VERSION});
-var storage = require("./storage");
+var storage = new aws.S3();
+var logger = require("./logger");
 
 var params = {
     MaxNumberOfMessages: 10,
@@ -17,6 +18,46 @@ var params = {
         'All'
     ]
 };
+
+function deleteObject(guid) {
+    var params = {Bucket: utils.bucketName, Key: guid}; 
+    storage.deleteObject(params, function (err, data) {
+        if (err)
+            logger.log("Error while deleting object guid=\""+guid+"\" msg=\""+err+"\"");
+    });
+}
+
+function invertColor(guid) {
+
+    var params = {Bucket: utils.BucketName, Key: guid};
+    storage.getSignedUrl('getObject', params, function (err, url) {
+
+        jimp.read(url, function (err, image) {
+            if (err)
+                logger.log("Error read object guid=\""+guid+"\" msg=\""+err+"\"");
+
+            image.invert()
+            image.getBuffer(image.getMIME(), (err, buffer) => {
+
+                if (err)
+                    logger.log("Error while inverting colors in image guid=\""+guid+"\" msg=\""+err+"\"");
+                else {
+
+                    var invertedImage = {
+                        Bucket: utils.BucketName,
+                        Key: utils.generateNewGuid(),
+                        Body: buffer
+                    };
+
+                    storage.putObject(invertedImage, function (err, data) {
+                        if (err)
+                            logger.log("Error uploading object guid=\""+guid+"\" msg=\""+err+"\"");
+                    });
+                }
+            });
+        });
+    });
+}
 
 var consumeMessages = function () {
     queue.receiveMessage(params, function (err, data) {      
@@ -32,10 +73,10 @@ var consumeMessages = function () {
                         var guid = JSON.parse(value.Body);
                         switch (numberType) {
                             case utils.DELETE:
-                                storage.delete(guid);
+                                this.deleteObject(guid);
                                 break;
-                            case utils.ADD_TEXT:
-                                //Do add text
+                            case utils.INVERT:
+                                this.invertColor(guid);
                                 break;
                             case utils.GREYSCALE:
                                 //Do greyscale
@@ -67,4 +108,5 @@ var consumeMessages = function () {
         }
     });
 };
+
 consumeMessages();

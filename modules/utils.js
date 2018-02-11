@@ -5,7 +5,7 @@ module.exports = {
 
     /*Transformation types*/
     DELETE: "1",
-    ADD_TEXT: "2",
+    INVERT: "2",
     GREYSCALE: "3",
     SEPIA: "2017-08-30",
 
