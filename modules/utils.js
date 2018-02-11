@@ -1,6 +1,7 @@
 module.exports = {
     BucketName: "psoir",
     QueueUrl: "https://sqs.eu-central-1.amazonaws.com/242391066238/Queue",
+    API_VERSION: "2017-08-30",
 
     /*Transformation types*/
     DELETE: "1",

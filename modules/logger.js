@@ -1,7 +1,7 @@
 module.exports = {
     log: function (message) {
 
-        var queueHandler = require("./queueHandler");
+        var utils = require("./utils");
         var logTableName = "LogTable";
         var aws = require('aws-sdk');
         aws.config.loadFromPath('./config.json');
@@ -10,14 +10,14 @@ module.exports = {
         var params = {
             Item: {
                 "GUID": {
-                    S: queueHandler.generateNewGuid()
+                    S: utils.generateNewGuid()
                 }, 
                 "timestamp": {
                     S: String(Date.now())
                 }, 
 
                 "Message": {
-                    S: "Worker; " + message
+                    S: "Backend; " + message
                 }
             },
             ReturnConsumedCapacity: "TOTAL",
