@@ -62,10 +62,6 @@ function transform(guid, type) {
     });
 }
 
-function transformToGreyscale(guid) {
-
-}
-
 var consumeMessages = function () {
     queue.receiveMessage(params, function (err, data) {      
         var timeout = 3000;
