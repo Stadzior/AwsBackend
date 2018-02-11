@@ -75,7 +75,7 @@ var consumeMessages = function () {
                         const transformationType = value.MessageAttributes["Type"].StringValue;
                         var guid = JSON.parse(value.Body);
 
-                        this.transform(guid, transformationType);
+                        transform(guid, transformationType);
 
                         var deleteParams = {
                             QueueUrl: utils.QueueUrl,
