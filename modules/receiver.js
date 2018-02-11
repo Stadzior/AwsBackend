@@ -18,7 +18,7 @@ var params = {
     ]
 };
 
-var receiveMessages = function () {
+var consumeMessages = function () {
     queue.receiveMessage(params, function (err, data) {      
         var timeout = 3000;
         if (err)
@@ -58,15 +58,14 @@ var receiveMessages = function () {
                     }
 
                 });
-                receiveMessages();
+                consumeMessages();
 
             } else {
                 setTimeout(function () {
-                    receiveMessages()
+                    consumeMessages()
                 }, timeout);
             }
         }
     });
-
 };
-receiveMessages();
+consumeMessages();
