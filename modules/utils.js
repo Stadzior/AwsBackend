@@ -1,4 +1,13 @@
 module.exports = {
+    BucketName: "psoir",
+    QueueUrl: "https://sqs.eu-central-1.amazonaws.com/242391066238/Queue",
+
+    /*Transformation types*/
+    DELETE: "1",
+    ADD_TEXT: "2",
+    GREYSCALE: "3",
+    SEPIA: "2017-08-30",
+
     generateNewGuid: function () {
         var d = new Date().getTime();
         var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
