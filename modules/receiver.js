@@ -27,7 +27,7 @@ function deleteObject(guid) {
     });
 }
 
-function invertColor(guid) {
+function transform(guid, type) {
 
     var params = {Bucket: utils.BucketName, Key: guid};
     storage.getSignedUrl('getObject', params, function (err, url) {
@@ -36,20 +36,31 @@ function invertColor(guid) {
             if (err)
                 logger.log("Error read object guid=\""+guid+"\" msg=\""+err+"\"");
 
-            image.invert()
+            switch (type) {
+                case utils.INVERT:
+                    image.invert();
+                    break;
+                case utils.GREYSCALE:
+                    image.greyscale();
+                    break;
+                case utils.SEPIA:
+                    image.sepia();
+                    break;
+            }
+
             image.getBuffer(image.getMIME(), (err, buffer) => {
 
                 if (err)
-                    logger.log("Error while inverting colors in image guid=\""+guid+"\" msg=\""+err+"\"");
+                    logger.log("Error while transforming image guid=\""+guid+"\" msg=\""+err+"\"");
                 else {
 
-                    var invertedImage = {
+                    var transformedImage = {
                         Bucket: utils.BucketName,
                         Key: utils.generateNewGuid(),
                         Body: buffer
                     };
 
-                    storage.putObject(invertedImage, function (err, data) {
+                    storage.putObject(transformedImage, function (err, data) {
                         if (err)
                             logger.log("Error uploading object guid=\""+guid+"\" msg=\""+err+"\"");
                     });
@@ -57,6 +68,10 @@ function invertColor(guid) {
             });
         });
     });
+}
+
+function transformToGreyscale(guid) {
+
 }
 
 var consumeMessages = function () {
@@ -69,22 +84,13 @@ var consumeMessages = function () {
                 data.Messages.forEach(function (value) {
 
                     if (Number(value["Attributes"].ApproximateReceiveCount) <= 1) {
-                        const numberType = value.MessageAttributes["Type"].StringValue;
+                        const transformationType = value.MessageAttributes["Type"].StringValue;
                         var guid = JSON.parse(value.Body);
-                        switch (numberType) {
-                            case utils.DELETE:
-                                this.deleteObject(guid);
-                                break;
-                            case utils.INVERT:
-                                this.invertColor(guid);
-                                break;
-                            case utils.GREYSCALE:
-                                //Do greyscale
-                                break;
-                            case utils.SEPIA:
-                                //DO sepia
-                                break;
-                        }
+
+                        if (transformationType == utils.DELETE)
+                            this.deleteObject(guid);
+                        else
+                            this.transform(guid, transformationType);
 
                         var deleteParams = {
                             QueueUrl: utils.QueueUrl,
