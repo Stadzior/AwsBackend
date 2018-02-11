@@ -19,14 +19,6 @@ var params = {
     ]
 };
 
-function deleteObject(guid) {
-    var params = {Bucket: utils.bucketName, Key: guid}; 
-    storage.deleteObject(params, function (err, data) {
-        if (err)
-            logger.log("Error while deleting object guid=\""+guid+"\" msg=\""+err+"\"");
-    });
-}
-
 function transform(guid, type) {
 
     var params = {Bucket: utils.BucketName, Key: guid};
@@ -87,10 +79,7 @@ var consumeMessages = function () {
                         const transformationType = value.MessageAttributes["Type"].StringValue;
                         var guid = JSON.parse(value.Body);
 
-                        if (transformationType == utils.DELETE)
-                            this.deleteObject(guid);
-                        else
-                            this.transform(guid, transformationType);
+                        this.transform(guid, transformationType);
 
                         var deleteParams = {
                             QueueUrl: utils.QueueUrl,

@@ -4,10 +4,9 @@ module.exports = {
     API_VERSION: "2017-08-30",
 
     /*Transformation types*/
-    DELETE: "1",
-    INVERT: "2",
-    GREYSCALE: "3",
-    SEPIA: "2017-08-30",
+    INVERT: "1",
+    GREYSCALE: "2",
+    SEPIA: "3",
 
     generateNewGuid: function () {
         var d = new Date().getTime();
