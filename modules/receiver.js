@@ -3,7 +3,7 @@ aws.config.loadFromPath('./config.json');
 var utils = require("./utils");
 var jimp = require("jimp");
 var queue = new aws.SQS({apiVersion: utils.API_VERSION});
-var storage = new aws.S3();
+var storage = require("./storage");
 
 var params = {
     MaxNumberOfMessages: 10,
@@ -28,12 +28,11 @@ var consumeMessages = function () {
                 data.Messages.forEach(function (value) {
 
                     if (Number(value["Attributes"].ApproximateReceiveCount) <= 1) {
-
                         const numberType = value.MessageAttributes["Type"].StringValue;
-
+                        var guid = JSON.parse(value.Body);
                         switch (numberType) {
                             case utils.DELETE:
-                                //Do delete
+                                storage.delete(guid);
                                 break;
                             case utils.ADD_TEXT:
                                 //Do add text
