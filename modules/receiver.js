@@ -74,7 +74,7 @@ var consumeMessages = function () {
                     if (Number(value["Attributes"].ApproximateReceiveCount) <= 1) {
                         const transformationType = value.MessageAttributes["Type"].StringValue;
                         var guid = JSON.parse(value.Body);
-
+                        logger.log("message sent with type=\""+transformationType+"\"");
                         transform(guid, transformationType);
 
                         var deleteParams = {
