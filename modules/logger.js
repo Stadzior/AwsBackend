@@ -22,7 +22,9 @@ module.exports = {
             ReturnConsumedCapacity: "TOTAL",
             TableName: logTableName
         };
-        database.putItem(params, function (err, data) {});
+        database.putItem(params, function (err, data) {
+            console.log(err.message);
+        });
 
     },
 }
