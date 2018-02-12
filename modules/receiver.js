@@ -87,6 +87,10 @@ var consumeMessages = function () {
                     }
                     else
                     {
+                        var deleteParams = {
+                            QueueUrl: utils.QueueUrl,
+                            ReceiptHandle: value.ReceiptHandle
+                        };
                         console.log("attempting cleanup");
                         queue.deleteMessage(deleteParams, function (err, data) {
                             if (err){
