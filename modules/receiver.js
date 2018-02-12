@@ -80,15 +80,21 @@ var consumeMessages = function () {
                             ReceiptHandle: value.ReceiptHandle
                         };
                         queue.deleteMessage(deleteParams, function (err, data) {
-                            if (err)
+                            if (err){
                                 logger.log("Delete error: " + err.message);
+                            }
                         });
                     }
                     else
                     {
+                        console.log("attempting cleanup");
                         queue.deleteMessage(deleteParams, function (err, data) {
-                            if (err)
+                            if (err){
+                                console.log("error occured");
+                                console.log(err.type);
+                                console.log(err.message);
                                 logger.log("Delete error: " + err.message);
+                            }
                         });
                     }
 
