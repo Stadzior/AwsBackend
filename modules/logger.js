@@ -23,7 +23,8 @@ module.exports = {
             TableName: logTableName
         };
         database.putItem(params, function (err, data) {
-            console.log(err.message);
+            if (err)
+                console.log(err.message);
         });
 
     },
