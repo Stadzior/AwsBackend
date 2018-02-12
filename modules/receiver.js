@@ -70,22 +70,28 @@ var consumeMessages = function () {
         else {
             if (data.Messages) {
                 data.Messages.forEach(function (value) {
-
+                    console.log('checkpoint1');
                     if (Number(value["Attributes"].ApproximateReceiveCount) <= 1) {
+                        console.log('checkpoint2');
                         const transformationType = value.MessageAttributes["Type"].StringValue;
                         var guid = JSON.parse(value.Body);
                         logger.log("message received with type=\""+transformationType+"\"");
                         transform(guid, transformationType);
-
+                        console.log('checkpoint3');
                         var deleteParams = {
                             QueueUrl: utils.QueueUrl,
                             ReceiptHandle: value.ReceiptHandle
                         };
-
+                        console.log('checkpoint4');
                         queue.deleteMessage(deleteParams, function (err, data) {
                             if (err)
+                            {
+                                console.log('checkpoint5');
                                 logger.log("Delete error: " + err);
+                                console.log('checkpoint6');
+                            }
                         });
+                        console.log('checkpoint6');
                     }
 
                 });
