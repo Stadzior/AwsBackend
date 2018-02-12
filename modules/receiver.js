@@ -73,7 +73,7 @@ var consumeMessages = function () {
                         var guid = JSON.parse(value.Body);
 
                         console.log(value.Body);
-                        console.log(value.ReceiptHandle);
+                        console.log(transformationType);
                         logger.log("message received with type=\""+transformationType+"\"");
                         transform(guid, transformationType);
                         var deleteParams = {
