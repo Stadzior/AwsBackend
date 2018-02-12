@@ -25,7 +25,6 @@ function transform(guid, type) {
     storage.getSignedUrl('getObject', params, function (err, url) {
 
         jimp.read(url, function (err, image) {
-            console.log("read");
             if (err)
                 logger.log("Error read object guid=\""+guid+"\" msg=\""+err+"\"");
             switch (type) {
@@ -41,7 +40,6 @@ function transform(guid, type) {
             }
 
             image.getBuffer(image.getMIME(), (err, buffer) => {
-                console.log("getBuff");
                 if (err)
                     logger.log("Error while transforming image guid=\""+guid+"\" msg=\""+err+"\"");
                 else {
@@ -53,7 +51,6 @@ function transform(guid, type) {
                     };
 
                     storage.putObject(transformedImage, function (err, data) {
-                        console.log("putObj");
                         if (err)
                             logger.log("Error uploading object guid=\""+guid+"\" msg=\""+err+"\"");
                     });
@@ -74,6 +71,9 @@ var consumeMessages = function () {
                     if (Number(value["Attributes"].ApproximateReceiveCount) <= 1) {
                         const transformationType = value.MessageAttributes["Type"].StringValue;
                         var guid = JSON.parse(value.Body);
+
+                        console.log(value.Body);
+                        console.log(value.ReceiptHandle);
                         logger.log("message received with type=\""+transformationType+"\"");
                         transform(guid, transformationType);
                         var deleteParams = {
