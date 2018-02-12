@@ -85,7 +85,11 @@ var consumeMessages = function () {
                         queue.deleteMessage(deleteParams, function (err, data) {
                             console.log('suspect2');
                             if (err)
-                                logger.log("Delete error: " + err.message);                           
+                            {
+                                console.log(err.type);
+                                console.log(err.message);
+                                logger.log("Delete error: " + err.message);   
+                            }                   
                         });
                     }
                     else
