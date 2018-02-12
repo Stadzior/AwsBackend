@@ -25,10 +25,9 @@ function transform(guid, type) {
     storage.getSignedUrl('getObject', params, function (err, url) {
 
         jimp.read(url, function (err, image) {
-            console.log('suspect4');
+            console.log("read");
             if (err)
                 logger.log("Error read object guid=\""+guid+"\" msg=\""+err+"\"");
-
             switch (type) {
                 case utils.INVERT:
                     image.invert();
@@ -42,6 +41,7 @@ function transform(guid, type) {
             }
 
             image.getBuffer(image.getMIME(), (err, buffer) => {
+                console.log("getBuff");
                 if (err)
                     logger.log("Error while transforming image guid=\""+guid+"\" msg=\""+err+"\"");
                 else {
@@ -53,6 +53,7 @@ function transform(guid, type) {
                     };
 
                     storage.putObject(transformedImage, function (err, data) {
+                        console.log("putObj");
                         if (err)
                             logger.log("Error uploading object guid=\""+guid+"\" msg=\""+err+"\"");
                     });
@@ -80,15 +81,8 @@ var consumeMessages = function () {
                             ReceiptHandle: value.ReceiptHandle
                         };
                         queue.deleteMessage(deleteParams, function (err, data) {
-                            console.log('suspect2');
-                            if (err)
-                            {
-                                console.log('suspect3');
-                                console.log(err.type);
-                                console.log(err.message);
-                                logger.log("Delete error: " + err.message);   
-                            }              
-                            console.log('suspect4');     
+                            if (err)                        
+                                logger.log("Delete error: " + err.message);             
                         });
                     }
                     else
@@ -103,9 +97,7 @@ var consumeMessages = function () {
                                 logger.log("Delete error: " + err.message);
                         });
                     }
-                    console.log('suspect5');
                 });
-                console.log('suspect6');
                 consumeMessages();
 
             } else {
