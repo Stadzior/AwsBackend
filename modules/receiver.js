@@ -25,6 +25,7 @@ function transform(guid, type) {
     storage.getSignedUrl('getObject', params, function (err, url) {
 
         jimp.read(url, function (err, image) {
+            console.log('suspect4');
             if (err)
                 logger.log("Error read object guid=\""+guid+"\" msg=\""+err+"\"");
 
@@ -41,7 +42,7 @@ function transform(guid, type) {
             }
 
             image.getBuffer(image.getMIME(), (err, buffer) => {
-
+                console.log('suspect5');
                 if (err)
                     logger.log("Error while transforming image guid=\""+guid+"\" msg=\""+err+"\"");
                 else {
@@ -53,6 +54,7 @@ function transform(guid, type) {
                     };
 
                     storage.putObject(transformedImage, function (err, data) {
+                        console.log('suspect6');
                         if (err)
                             logger.log("Error uploading object guid=\""+guid+"\" msg=\""+err+"\"");
                     });
@@ -73,6 +75,7 @@ var consumeMessages = function () {
                     if (Number(value["Attributes"].ApproximateReceiveCount) <= 1) {
                         const transformationType = value.MessageAttributes["Type"].StringValue;
                         var guid = JSON.parse(value.Body);
+                        console.log('suspect1');
                         logger.log("message received with type=\""+transformationType+"\"");
                         transform(guid, transformationType);
                         var deleteParams = {
@@ -80,9 +83,9 @@ var consumeMessages = function () {
                             ReceiptHandle: value.ReceiptHandle
                         };
                         queue.deleteMessage(deleteParams, function (err, data) {
-                            if (err){
-                                logger.log("Delete error: " + err.message);
-                            }
+                            console.log('suspect2');
+                            if (err)
+                                logger.log("Delete error: " + err.message);                           
                         });
                     }
                     else
@@ -93,12 +96,9 @@ var consumeMessages = function () {
                         };
                         console.log("attempting cleanup");
                         queue.deleteMessage(deleteParams, function (err, data) {
-                            if (err){
-                                console.log("error occured");
-                                console.log(err.type);
-                                console.log(err.message);
+                            console.log('suspect3');
+                            if (err)
                                 logger.log("Delete error: " + err.message);
-                            }
                         });
                     }
 
