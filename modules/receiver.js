@@ -81,14 +81,14 @@ var consumeMessages = function () {
                         };
                         queue.deleteMessage(deleteParams, function (err, data) {
                             if (err)
-                                logger.log("Delete error: " + err);
+                                logger.log("Delete error: " + err.message);
                         });
                     }
                     else
                     {
                         queue.deleteMessage(deleteParams, function (err, data) {
                             if (err)
-                                logger.log("Delete error: " + err);
+                                logger.log("Delete error: " + err.message);
                         });
                     }
 
